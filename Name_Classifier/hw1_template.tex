@@ -1,0 +1,79 @@
+\documentclass{article}
+\usepackage[letterpaper]{geometry}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+
+\title{CIS 419/519: Homework 1}
+\author{\{Your name here\}}
+\date{}
+
+\begin{document}
+    \maketitle
+    Although the solutions are entirely my own, I consulted with the following people while working on this homework: \{Names here\}
+    
+    \section{Decision Tree Learning}
+        \begin{enumerate}
+            \item % a
+            Show your work:
+            \begin{equation*}
+                \mathit{InfoGain}(\mathit{Outlook}) =
+            \end{equation*}
+            \begin{equation*}
+                \mathit{InfoGain}(\mathit{Humidity}) =
+            \end{equation*}
+            
+            \item % b
+            % The template tree is meaningless (it's not a hint about what the answer is)
+            Show your work:
+            \begin{equation*}
+                \mathit{GainRatio}(\mathit{Outlook}) =
+            \end{equation*}
+            \begin{equation*}
+                \mathit{GainRatio}(\mathit{Humidity}) =
+            \end{equation*}
+            
+            \item % c 
+            ~\\
+            
+            \includegraphics[width=0.8\textwidth]{example-image}
+                        
+            \item % d
+            Yes/No because...
+        \end{enumerate}
+        
+       \section{Decision Trees \& Linear Discriminants [CIS 519 ONLY]}
+        
+        A decision tree can include oblique splits by...
+        
+        
+        \section{Programming Exercises}
+        \textbf{Features}: description of the features you used to train the classifiers.
+        
+        \noindent\textbf{Parameters}: description of the parameters you used for each classifier, such as the learning rate and error threshold.
+        
+        The ranking of all of the classifiers (put classifiers in order):
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|}
+                \hline
+                Algorithm & $tr_A$ & $p_A$ & $p_A$ Conf. Interval [519 ONLY]\\
+                \hline
+                Simple SGD & a & b & c \\
+                Full Decision Tree & a & b & c \\
+                Decision Tree - Height 4 & a & b & c \\
+                Decision Tree - Height 8 & a & b & c \\
+                SGD + Decision Stump Features & a & b & c \\
+                \hline
+        \end{tabular}
+                \end{center}
+        
+        [CIS 519 ONLY] The difference between these pairs of classifiers is statistically significant: x, y, z.
+        
+        \textbf{Conclusion}: description of which classifier you think is best and why
+        
+        \textbf{Comments}: discussion of whether the results met your expectations, $tr_A$ versus $p_A$, and compare the results of the different algorithms. 
+        
+\end{document}
