@@ -8,7 +8,7 @@ from numpy import loadtxt, ones, zeros, where
 import numpy as np
 from pylab import plot,legend,show,where,scatter,xlabel, ylabel,linspace,contour,title
 import matplotlib.pyplot as plt
-from logreg import LogisticRegression
+from logreg_adagrad import LogisticRegressionAdagrad
 
 if __name__ == "__main__":
     # Load Data
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     X = (X - mean) / std
     
     # train logistic regression
-    logregModel = LogisticRegression(regLambda = 0.00000001)
+    logregModel = LogisticRegressionAdagrad(regLambda = 0.000000001)
     logregModel.fit(X,y)
     
     # Plot the decision boundary

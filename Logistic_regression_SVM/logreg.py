@@ -7,7 +7,7 @@ import numpy as np
 
 class LogisticRegression:
 
-	def __init__(self, alpha = 0.01, regLambda=0.01, regNorm=2, epsilon=0.0001, maxNumIters = 10000):
+	def __init__(self, alpha = 0.1, regLambda=0.01, regNorm=2, epsilon=0.0001, maxNumIters = 10000):
 
 		'''
 		Constructor
@@ -45,10 +45,6 @@ class LogisticRegression:
 		yhat = self.sigmoid(np.matmul(X,theta))
 
 		cost = -(np.matmul(y.T,np.log(yhat)) + np.matmul((1-y).T,np.log(1-yhat))) + (self.reglambda/2)*np.linalg.norm(theta)
-		print(cost)
-		# if np.isnan(cost):
-		# 	print(yhat)
-		# 	print(cost)
 		return cost
 
 
@@ -73,13 +69,6 @@ class LogisticRegression:
 		'''
 		yhat 	= 	self.sigmoid(np.matmul(X,theta))
 
-
-
-		
-
-		
-
-
 		lambd_mat 		= 	self.reglambda * np.identity(len(theta))
 		lambd_mat[0,0] 	= 	0
 
@@ -88,13 +77,7 @@ class LogisticRegression:
 		regul = np.matmul(lambd_mat,theta)
 		mat   = np.matmul(X.T,(yhat-y))
 
-		grad = mat + regul
-
-		# theta= theta[np.newaxis]
-		# theta= theta.T
-
-		# grad = np.matmul(X.T,(yhat-y)) + np.matmul(lambd_mat, theta)
-		
+		grad = mat + regul		
 
 		return grad
 		
@@ -145,11 +128,11 @@ class LogisticRegression:
 			theta_curr = theta_curr - self.alpha * grad 
 
 
-			# cost = self.computeCost(theta_curr,X,y,self.reglambda)
+			cost = self.computeCost(theta_curr,X,y,self.reglambda)
 
 			iterations 		= 	iterations + 1
 
-			# print("Iteration: ", iterations,"cost:", cost, " Theta: ", theta_curr)
+			print("Iteration: ", iterations,"cost:", cost, " Theta: ", theta_curr)
 
 			if (iterations>=self.max_Iter):
 				print("maximum iterations reached")
@@ -194,6 +177,8 @@ class LogisticRegression:
 
 		val =  1/ (  1+np.exp(-Z) )
 		val = np.array(val)
+		# val = np.rint(val)
+		#print (val)
 		return val
 		'''
 		Computes the sigmoid function 1/(1+exp(-z))
@@ -237,19 +222,5 @@ X,Y = data()
 X = np.array(X)
 Y = np.array(Y)
 X = np.c_[np.ones((100,1)),X]
-# print(X)
-# ones 	= 	np.ones((len(X),1))
-# X 		= 	np.hstack((X,ones))
-# print(X.T)
-# #print(Y)
-# theta = np.random.normal(0, 0.1, (3))
-# theta = theta[np.newaxis]
-# theta = theta.T
-# yhat = Log_ob.sigmoid(np.matmul(X,theta))
-# print(yhat)
-# grad1 = np.sum((yhat-Y)*X[:,0]) + theta[0]
-# grad2 = np.sum((yhat-Y)*X[:,1]) + theta[1]
-# grad = np.array([grad1,grad2])
-# print(grad)
-#Log_ob.fit(X,Y)
+
 
