@@ -19,8 +19,7 @@ def mapFeature(x1, x2):
     Xlen = x1.shape[0]
 
     for i in range(Xlen):
-        X_feat =            [ 1,
-                            x1[i],
+        X_feat =            [x1[i],
                             x2[i],
                             x1[i]**2,
                             x1[i]*x2[i],

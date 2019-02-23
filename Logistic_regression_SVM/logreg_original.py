@@ -2,15 +2,15 @@
 	TEMPLATE FOR MACHINE LEARNING HOMEWORK
 	AUTHOR Eric Eaton
 '''
+
 import numpy as np
-import matplotlib.pyplot as plt
 
+class LogisticRegression:
 
-class LogisticRegressionAdagrad:
+	def __init__(self, alpha = 0.01, regLambda=0.01, regNorm=2, epsilon=0.00000001, maxNumIters = 2000):
 
-	def __init__(self, alpha = 0.1, regLambda=0.01, regNorm=1, epsilon=0.0001, maxNumIters = 10000):
 		'''
-		Constructor
+		Constructo
 		Arguments:
 			alpha is the learning rate
 			regLambda is the regularization parameter
@@ -18,16 +18,23 @@ class LogisticRegressionAdagrad:
 			epsilon is the convergence parameter
 			maxNumIters is the maximum number of iterations to run
 		'''
+
+
 		self.alpha = alpha
-		self.regLambda = regLambda
 		self.regNorm = regNorm
+		self.regLambda = regLambda
 		self.epsilon = epsilon
 		self.max_Iter = maxNumIters
 		self.theta = None
+		self.mean = None
+		self.std = None
+
+		
 
 	
 
 	def computeCost(self, theta, X, y, regLambda):
+
 		'''
 		Computes the objective function
 		Arguments:
@@ -37,19 +44,30 @@ class LogisticRegressionAdagrad:
 		Returns:
 			a scalar value of the cost  ** make certain you're not returning a 1 x 1 matrix! **
 		'''
+
+
 		yhat = self.sigmoid(np.matmul(X,theta))
-		
+
+		Sub = 1-yhat
+
+		Sub[np.where(Sub==0)]=1e-10
+		yhat[np.where(yhat==0)]=1e-10
 
 		if self.regNorm == 1:
-			cost = -(np.matmul(y.T,np.log(yhat)) + np.matmul((1-y).T,np.log(1-yhat))) + (regLambda/2)*np.sum(abs(theta))
+			cost = -(np.matmul(y.T,np.log(yhat)) + np.matmul((1-y).T,np.log(Sub))) + (regLambda/2)*np.linalg.norm(theta,1)
 
 		elif self.regNorm == 2:
-			cost = -(np.matmul(y.T,np.log(yhat)) + np.matmul((1-y).T,np.log(1-yhat))) + (regLambda/2)*np.matmul(theta.T,theta)
-
-		# print(cost[0,0])
-
+			cost = -(np.matmul(y.T,np.log(yhat)) + np.matmul((1-y).T,np.log(Sub))) + (regLambda/2)*np.linalg.norm(theta,2)
 
 		return cost
+
+
+
+
+
+
+
+		
 
 	
 	
@@ -63,27 +81,23 @@ class LogisticRegressionAdagrad:
 		Returns:
 			the gradient, an d-dimensional vector
 		'''
-		m = len(y)
+		yhat 	= 	self.sigmoid(np.matmul(X,theta))
 
-		rand_ind = np.random.randint(0,m)
-		X_i = X[rand_ind,:].reshape(1,X.shape[1])
-		y_i = y[rand_ind].reshape(1,1)
-
-
-		yhat    =   self.sigmoid(np.matmul(X_i,theta))
-
-		lambd_mat       =   regLambda * np.identity(len(theta))
-		lambd_mat[0,0]  =   0
-
+		lambd_mat 		= 	regLambda * np.identity(len(theta))
+		lambd_mat[0,0] 	= 	0
 
 
 		regul = np.matmul(lambd_mat,theta)
-		mat   = np.matmul(X_i.T,(yhat-y_i))
+		mat   = np.matmul(X.T,(yhat-y))
 
 		grad = mat + regul
 
 		return grad
+		
 
+		
+
+		
 	
 
 
@@ -93,17 +107,16 @@ class LogisticRegressionAdagrad:
 		Arguments:
 			X is a n-by-d numpy matrix
 			y is an n-dimensional numpy vector
+
 		'''
-		
 		iterations = 1
 
-		cost_array = []
-		iter_array = []
-
+		
 		
 
 		n,d = X.shape
 		X = np.c_[np.ones((n,1)),X]
+
 
 		theta_old = np.random.normal(0, 0.1, (d+1))
 		theta_old = theta_old[np.newaxis]
@@ -115,56 +128,41 @@ class LogisticRegressionAdagrad:
 		theta_curr  = theta_curr[np.newaxis]
 		theta_curr = theta_curr.T
 
-		G_grad = 0
+		while(self.hasConverged(theta_curr,theta_old)):
 
-		while(True):
-
-
-			
 			theta_old = theta_curr
 
-			grad    =   self.computeGradient(theta_curr,X,y,self.regLambda)
-
-
-
-			G_grad = G_grad + np.square(grad)
-
-			# print (G_grad)
-
-
-
-			alpha = self.alpha / (np.sqrt(G_grad) + 0.1)
+			grad 	= 	self.computeGradient(theta_curr,X,y,self.regLambda)
 			
-			theta_curr = theta_curr - np.multiply(alpha, grad)
+
+			theta_curr = theta_curr - self.alpha * grad 
+
 
 			cost = self.computeCost(theta_curr,X,y,self.regLambda)
-			
-			cost_array.append(cost)
 
-			iter_array.append(iterations)
+			if np.isnan(cost[0,0]):
+				print("nan cost ")
+				print(X)
+				print(y)
+				break
 
-			iterations      =   iterations + 1
+			iterations 		= 	iterations + 1
 
-
-			# print("Iteration: ", iterations,"cost:", cost, " Theta: ", theta_curr)
+			print("Iteration: ", iterations,"cost:", cost, " Theta: ", theta_curr)
 
 			if (iterations>=self.max_Iter):
 				print("maximum iterations reached")
 				break
-
+			# break
+		if (~self.hasConverged(theta_curr,theta_old)):
+			print("we have convergence")
+		
 		self.theta = theta_curr
-		# fig = plt.figure()
-		# plt.plot(iter_array,cost_array)
-		# fig.suptitle('Performance of cost over iterations for gradient descent')
-		# plt.xlabel('iterations')
-		# plt.ylabel('cost')
-		# fig.savefig('test.jpg')
-		# plt.show()
 
-		print(self.theta)
-		if(~self.hasConverged(theta_curr,theta_old)): 
-			print("converged")
 
+
+
+			
 
 
 
@@ -175,7 +173,8 @@ class LogisticRegressionAdagrad:
 			X is a n-by-d numpy matrix
 		Returns:
 			an n-dimensional numpy vector of the predictions
-		'''
+		-'''
+
 		
 		n,d = X.shape
 		X = np.c_[np.ones((n,1)),X]
@@ -187,13 +186,12 @@ class LogisticRegressionAdagrad:
 				y_pred[i]=1
 			else:
 				y_pred[i]=0
-		y_pred = np.array(y_pred)
 
-	
-
-		return y_pred
+		return np.array(y_pred)
 
 
+
+## make binary the ypred you get 
 
 	def sigmoid(self, Z):
 
@@ -205,7 +203,6 @@ class LogisticRegressionAdagrad:
 		'''
 		Computes the sigmoid function 1/(1+exp(-z))
 		'''
-
 	def hasConverged(self, theta_new,theta_old):
 		
 
@@ -214,3 +211,36 @@ class LogisticRegressionAdagrad:
 			return True
 		else:
 			return False
+
+
+
+
+
+
+
+
+# def data():
+# 	Y_set   =   []
+# 	X_set   =   []
+# 	with open('data1.dat' , 'r') as f:
+# 		for line in f:
+# 			line_content = line.strip()
+# 			content_word = line_content.split(',')
+# 			content_word = [float(i) for i in content_word]
+# 			content_word = np.array(content_word)
+# 			X_set.append ([content_word[0],content_word[1]])
+# 			Y_set.append(content_word[2])
+# 		return(X_set,Y_set)
+
+
+
+
+
+# Log_ob = LogisticRegression()
+
+# X,Y = data()
+# X = np.array(X)
+# Y = np.array(Y)
+# X = np.c_[np.ones((100,1)),X]
+
+

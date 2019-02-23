@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 class LinearRegression:
 
-    def __init__(self, init_theta=None, alpha=0.01, n_iter=100):
+    def __init__(self, init_theta=None, alpha=0.000015, n_iter=40000):
         '''
         Constructor
         '''
@@ -33,9 +33,11 @@ class LinearRegression:
         self.JHist = []
         for i in range(self.n_iter):
             self.JHist.append( (self.computeCost(X, y, theta), theta) )
-            print("Iteration: ", i+1, " Cost: ", self.JHist[i][0], " Theta: ", theta)
-            yhat = X*theta
-            theta = theta -  (X.T * (yhat - y)) * (self.alpha / n)
+            #print("Iteration: ", i+1, " Cost: ", self.JHist[i][0], " Theta: ", theta)
+            yhat = np.matmul(X,theta)
+            theta = theta -  np.matmul(X.T,(yhat - y))*    (self.alpha / n)
+            # print (theta)
+            # break
         return theta
     
 
@@ -68,7 +70,8 @@ class LinearRegression:
         n,d = X.shape
         if self.theta is None:
             self.theta = np.matrix(np.zeros((d,1)))
-        self.theta = self.gradientDescent(X,y,self.theta)    
+        self.theta = self.gradientDescent(X,y,self.theta)
+        return self.theta    
 
 
     def predict(self, X):

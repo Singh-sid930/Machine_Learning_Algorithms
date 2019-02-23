@@ -9,7 +9,7 @@ import numpy as np
 from pylab import plot,legend,show,where,scatter,xlabel, ylabel,linspace,contour,title
 import matplotlib.pyplot as plt
 from mapFeature import mapFeature
-from logreg_SGD import LogisticRegressionAdagrad
+from logreg import LogisticRegression
 
 if __name__ == "__main__":
     # Load Data
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     X = mapFeature(X[:,0],X[:,1])
     
     # train logistic regression
-    logregModel = LogisticRegressionAdagrad()
+    logregModel = LogisticRegression(regLambda = 10)
     logregModel.fit(X,y)
     
     

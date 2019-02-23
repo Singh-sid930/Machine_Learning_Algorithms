@@ -24,7 +24,7 @@ if __name__ == "__main__":
     X = (X - mean) / std
     
     # train logistic regression
-    logregModel = LogisticRegressionAdagrad(regLambda = 0.000000001)
+    logregModel = LogisticRegressionAdagrad(regLambda = 1)
     logregModel.fit(X,y)
     
     # Plot the decision boundary

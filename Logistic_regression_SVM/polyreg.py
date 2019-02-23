@@ -5,7 +5,6 @@
 
 import numpy as np
 
-
 #-----------------------------------------------------------------
 #  Class PolynomialRegression
 #-----------------------------------------------------------------
@@ -17,6 +16,12 @@ class PolynomialRegression:
         Constructor
         '''
         #TODO
+
+        self.degree = degree
+        self.reglambda = regLambda
+        self.theta = None
+        self.mean = None
+        self.std = None
 
 
     def polyfeatures(self, X, degree):
@@ -34,6 +39,22 @@ class PolynomialRegression:
             degree is a positive integer
         '''
         #TODO
+        X_ext = []
+        X_e_ext = []
+        for i in range(len(X)):
+
+            for r in range(1,degree+1):
+
+                X_e_ext.append(X[i]**r)
+
+
+            X_ext.append(X_e_ext)
+            X_e_ext = []
+        X_ext = np.array(X_ext)
+        return X_ext
+
+
+
         
 
     def fit(self, X, y):
@@ -49,6 +70,25 @@ class PolynomialRegression:
                 at first
         '''
         #TODO
+        X = self.polyfeatures(X,self.degree)
+
+        self.mean = X.mean(axis=0)
+        self.std = X.std(axis=0)
+
+        X = (X - self.mean) / self.std
+
+        n,d = X.shape
+        X = np.c_[np.ones((n,1)),X]     
+
+        y = np.array(y)
+        y = y[np.newaxis]
+        y = y.T
+
+        self.theta = np.matmul(np.matmul(np.linalg.pinv(np.matmul(X.T,X)),X.T),y)
+
+        # self.theta = theta.flatten()
+
+
         
         
     def predict(self, X):
@@ -60,7 +100,17 @@ class PolynomialRegression:
             an n-by-1 numpy array of the predictions
         '''
         # TODO
+        # print(self.degree)
 
+        X = self.polyfeatures(X,self.degree)
+    
+        X = (X - self.mean) / self.std
+
+        n,d = X.shape
+        X = np.c_[np.ones((n,1)),X]
+        y = np.matmul(X,self.theta)
+        y = y.flatten()
+        return y
 
 
 #-----------------------------------------------------------------
@@ -107,5 +157,7 @@ def learningCurve(Xtrain, Ytrain, Xtest, Ytest, regLambda, degree):
         predictTest = model.predict(Xtest)
         err = predictTest - Ytest;
         errorTest[i] = np.multiply(err, err).mean();
+    # print(errorTrain)
+    # print(errorTest)
     
     return (errorTrain, errorTest)

@@ -23,7 +23,7 @@ X = allData[:,:-1]
 Y = allData[:,-1]
 
 
-C = 0.01
+C = 100
 
 # train the SVM
 print("Training the SVM")
